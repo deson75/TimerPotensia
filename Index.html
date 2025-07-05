@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Timer Alarm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 80px;
+      background-color: #111;
+      color: white;
+    }
+
+    #timer {
+      font-size: 60px;
+      margin-bottom: 30px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+
+    button#stop {
+      background-color: #dc3545;
+    }
+
+    select {
+      font-size: 18px;
+      padding: 5px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">00:00</div>
+  <button id="start">Mulai</button>
+  <button id="stop">Berhenti</button>
+
+  <br><br>
+  <label>Interval bunyi:</label>
+  <select id="intervalSelect">
+    <option value="5">5 detik</option>
+    <option value="10">10 detik</option>
+    <option value="15" selected>15 detik</option>
+    <option value="30">30 detik</option>
+  </select>
+
+  <!-- Suara alarm -->
+  
+    
+<audio id="alarmSound" src="beep.mp3"></audio>
+
+    
+
+  <script>
+    let waktu = 0;
+    let timerAktif = false;
+    let intervalTimer;
+    const timerDisplay = document.getElementById("timer");
+    const alarm = document.getElementById("alarmSound");
+
+    function formatWaktu(detik) {
+      let menit = Math.floor(detik / 60);
+      let sisaDetik = detik % 60;
+      return `${menit.toString().padStart(2, '0')}:${sisaDetik.toString().padStart(2, '0')}`;
+    }
+
+    function mulaiTimer() {
+      if (timerAktif) return;
+      timerAktif = true;
+
+      const intervalBunyi = parseInt(document.getElementById("intervalSelect").value);
+
+      intervalTimer = setInterval(() => {
+        waktu++;
+        timerDisplay.textContent = formatWaktu(waktu);
+
+        if (waktu % intervalBunyi === 0) {
+          alarm.play();
+        }
+      }, 1000);
+    }
+
+    function berhentiTimer() {
+      clearInterval(intervalTimer);
+      timerAktif = false;
+    }
+
+    document.getElementById("start").addEventListener("click", () => {
+      mulaiTimer();
+    });
+
+    document.getElementById("stop").addEventListener("click", () => {
+      berhentiTimer();
+    });
+  </script>
+
+</body>
+</html>
